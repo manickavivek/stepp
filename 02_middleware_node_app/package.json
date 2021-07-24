@@ -1,0 +1,16 @@
+{
+  "name": "02_middleware_node_app",
+  "version": "1.0.0",
+  "description": "Middleware application for STEPP",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Manick",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^4.0.0"
+  }
+}
