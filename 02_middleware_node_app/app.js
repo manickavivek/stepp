@@ -116,21 +116,58 @@ app.post('/addStockTransaction', function (req, res) {
 
 app.post('/updateStockCount', function (req, res) {
     MongoClient.connect(mongodbUrl, function(err, db) {
-        if (err) throw err;        
-        var dbo = db.db("stepp_db");
-        dbo.collection("stock_available").insertOne({
+        if (err) throw err;
+        let dbo = db.db("stepp_db");
+        dbo.collection("stock_available").find({
             "model_number": req["body"]["model_number"],
             "model_type": req["body"]["model_type"],
             "model_size": req["body"]["model_size"],
-            "model_color": req["body"]["model_color"],
-            "available_count": req["body"]["available_count"]
-        }, 
-        function(err, result) {
+            "model_color": req["body"]["model_color"]            
+        }).toArray(function(err, result) {
             if (err) throw err;
-            if(result["acknowledged"] == true) {
-                res.json({"response": "Stock count updated!!"});
+            //Based on the select statement add/update the collection
+            if(result.length == 0) {
+                //No entry is found and so add the model_number into "stock_available" collection
+                dbo.collection("stock_available").insertOne({
+                    "model_number": req["body"]["model_number"],
+                    "model_type": req["body"]["model_type"],
+                    "model_size": req["body"]["model_size"],
+                    "model_color": req["body"]["model_color"],
+                    "available_count": req["body"]["update_count"]
+                }, 
+                function(err, result) {
+                    if (err) throw err;
+                    if(result["acknowledged"] == true) {
+                        res.json({"response": "Stock count updated for new entry!!"});
+                    }
+                    db.close();
+                });
+            } else {
+                //Entry found and so update the model_number into "stock_available" collection
+                let updatedCount = 0;
+                let availableCountOnDb = parseInt(result[0]["available_count"]);
+                let updateType = req["body"]["update_type"];
+                let updateCount = parseInt(req["body"]["update_count"]);
+                if(updateType == "add") {
+                    updatedCount = availableCountOnDb + updateCount;
+                } else {
+                    updatedCount = availableCountOnDb - updateCount;
+                }
+                
+                dbo.collection("stock_available").findOneAndUpdate({
+                    "model_number": req["body"]["model_number"],
+                    "model_type": req["body"]["model_type"],
+                    "model_size": req["body"]["model_size"],
+                    "model_color": req["body"]["model_color"]
+                }, {
+                    $set: {"available_count": updatedCount}
+                },
+                function(err, result) {
+                    if (err) throw err;
+                    res.json({"response": "Stock count updated for existing entry!!"});
+                    db.close();
+                });
             }
-            db.close();
         });
     });
 });

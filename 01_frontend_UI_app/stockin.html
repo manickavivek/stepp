@@ -28,7 +28,7 @@
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Model Type</label>
                   <div class="col-sm-10">
-                    <select id="model_type_id" class="form-control">
+                    <select id="model_type_id" onchange="modelTypeChange()" class="form-control">
                       <option value="standard">Standard</option>
                       <option value="customized">Customized</option>
                     </select>
@@ -98,13 +98,18 @@
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Total Quantity</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="txn_quantity_id" placeholder="Enter total number of pieces stocked up">
+                    <input type="number" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" class="form-control" id="txn_quantity_id" placeholder="Enter total number of pieces stocked up">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Customization Cost</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="customization_cost_id" placeholder="Enter customization cost (applicable only for model type - customized)">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">₹</div>
+                      </div>
+                      <input type="text" class="form-control" id="customization_cost_id" placeholder="Enter customization cost">
+                    </div>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -115,7 +120,7 @@
                 </div>
                 <div style="float: right;">
                   <button type="button" class="btn btn-primary" onclick="stockinBtnClick()">Submit</button>
-                  <a href="index.html" class="btn btn-primary">Go Back</a>
+                  <a id="go_back_id" href="index.html" class="btn btn-primary">Go Back</a>
                 </div>
             </form>
         </div>
