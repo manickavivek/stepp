@@ -20,13 +20,13 @@
         <div class="container">
             <form>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model</label>
+                  <label class="col-sm-2 col-form-label">Model*</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="model_no_id" placeholder="Enter model name/number">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Type</label>
+                  <label class="col-sm-2 col-form-label">Model Type*</label>
                   <div class="col-sm-10">
                     <select id="model_type_id" onchange="modelTypeChange()" class="form-control">
                       <option value="standard">Standard</option>
@@ -35,7 +35,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Size</label>
+                  <label class="col-sm-2 col-form-label">Model Size*</label>
                   <div class="col-sm-10">
                     <select id="model_size_id" class="form-control">
                       <option value="1">1</option>
@@ -62,7 +62,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Color</label>
+                  <label class="col-sm-2 col-form-label">Model Color*</label>
                   <div class="col-sm-10">
                     <select id="model_color_id" class="form-control">
                       <option value="Black">Black</option>
@@ -73,7 +73,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Rate Per Piece</label>
+                  <label class="col-sm-2 col-form-label">Rate Per Piece*</label>
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
@@ -84,19 +84,19 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Stock-in Date</label>
+                  <label class="col-sm-2 col-form-label">Stock-in Date*</label>
                   <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" id="txn_date_id">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Bill Number</label>
+                  <label class="col-sm-2 col-form-label">Bill Number*</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="txn_bill_no_id" placeholder="Enter bill number">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Total Quantity</label>
+                  <label class="col-sm-2 col-form-label">Total Quantity*</label>
                   <div class="col-sm-10">
                     <input type="number" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" class="form-control" id="txn_quantity_id" placeholder="Enter total number of pieces stocked up">
                   </div>
