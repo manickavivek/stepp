@@ -1,33 +1,51 @@
+let availableStock = "";
 $( document ).ready(function() {
+    $("#second_section_id").hide();
+    $("#submit_id").hide();
+    let payload = {};
+    genericApiCalls("GET", "/getAvailableStocks", payload, avlbStocksSuccesscb, errorcb)
 
-    modelTypeChange();
-
-    $("#model_rate_per_piece_id").keydown(function (event) {
-        rateInputHandle(event, $(this));
-    });
-
-    $("#customization_cost_id").keydown(function (event) {
-        rateInputHandle(event, $(this));
-    });
-
-    function rateInputHandle(event, thisObj) {
-        if (event.shiftKey == true) {
-            event.preventDefault();
+    function avlbStocksSuccesscb(data) {
+        let optionHtml = "";
+        availableStock = data["response"];
+        let dbData = data["response"];
+        for(let record in dbData) {
+            optionHtml += '<option value="'+dbData[record]["model_number"]+'">'+dbData[record]["model_number"]+'</option>';
         }
-        if ((event.keyCode >= 48 && event.keyCode <= 57) || 
-            (event.keyCode >= 96 && event.keyCode <= 105) || 
-            event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
-            event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
-            //Do nothing
-        } else {
-            event.preventDefault();
-        }
-        if(thisObj.val().indexOf('.') !== -1 && event.keyCode == 190) {
-            event.preventDefault();
-            //if a decimal has been added, disable the "."-button
-        }
-    }    
+        $("#model_no_id").html(optionHtml);
+    }
 });
+
+function confirmBtnClick() {
+    let modelNoInp = ($("#model_no_id").val()).trim();
+    let modelTypInp = $("#model_type_id").val();
+    let modelSizInp = $("#model_size_id").val();
+    let modelClrInp = $("#model_color_id").val();
+    let avlStockCount = 0;
+    for(let record in availableStock) {
+        let recordLoop = availableStock[record];
+        if(modelNoInp == recordLoop["model_number"] && modelTypInp == recordLoop["model_type"] && modelSizInp == recordLoop["model_size"] && modelClrInp == recordLoop["model_color"]) {
+            if(recordLoop["available_count"] <= 0) {
+                //do nothing
+            } else {
+                avlStockCount = recordLoop["available_count"];
+            }
+        }
+    }
+    if(avlStockCount == 0) {
+        alert("No stock availabe in store for the this product!!")
+    } else {
+        $("#second_section_id").show();
+        $("#submit_id").show();
+        $("#confirm_id").hide();
+        $("#model_no_id").attr("disabled", "true");
+        $("#model_type_id").attr("disabled", "true");
+        $("#model_size_id").attr("disabled", "true");
+        $("#model_color_id").attr("disabled", "true");
+        modelTypeChange();
+    }
+
+}
 
 function modelTypeChange() {
     if($("#model_type_id").val() == "standard") {
@@ -114,6 +132,6 @@ function stockinBtnClick() {
             alert("Update stock count failed!!");
         }
     }
+
+    
 }
-
-

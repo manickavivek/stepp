@@ -13,3 +13,11 @@ function genericApiCalls(type, path, payload, successcb, errorcb) {
         error: errorcb
     });
 }
+
+function errorcb(jqXHR, textStatus, errorThrown) {
+    alert("Something went wrong.. Please try later!!");
+    window.location.href = 'index.html';
+    console.log(jqXHR);
+    console.log(textStatus);
+    console.log(errorThrown);
+}

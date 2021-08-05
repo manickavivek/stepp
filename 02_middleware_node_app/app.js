@@ -172,6 +172,18 @@ app.post('/updateStockCount', function (req, res) {
     });
 });
 
+app.get('/getAvailableStocks', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("stepp_db");
+        dbo.collection("stock_available").find({}).toArray(function(err, result) {
+            if (err) throw err;
+            res.json({"response": result});
+            db.close();
+        });
+    });
+});
+
 app.listen(3000, function () {
   console.log('Stepp app listening on port 3000!');
 });
