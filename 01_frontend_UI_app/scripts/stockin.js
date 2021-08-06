@@ -51,13 +51,15 @@ function stockinBtnClick() {
     let commentsInp = ($("#comments_id").val()).trim();
 
     if(modelNoInp == "" || modelRteppInp == "" || txnDateInp == ":00Z" || billNoInp == "" || txnQuanInp == "") {
-        alert("Enter all mandatory inputs!!");
+        $("#modelMsg").html("Enter all mandatory inputs!!");
+        $("#alertPopup").modal("show");
         return;
     }
 
     if(modelTypInp == "customized") {
         if(custCostInp == "") {
-            alert("Enter customization cost!!");
+            $("#modelMsg").html("Enter customization cost!!");
+            $("#alertPopup").modal("show");
             return;
         }
     }
@@ -101,17 +103,26 @@ function stockinBtnClick() {
             console.log("Calling updateStockCount API..");
             genericApiCalls("POST", "/updateStockCount", updateStockCountPayload, updateStockCountSuccesscb, errorcb)
         } else {
-            alert("Add stock txn failed!!");
+            $("#modelMsg").html("Add stock txn failed!!");
+            $("#alertPopup").modal("show");
         }
     }
 
     function updateStockCountSuccesscb(data) {
+        setTimeout(function(){ 
+            $("#loadingPopup").modal("hide");
+        }, 500);
         if(data["response"] == "Stock count updated for new entry!!" || data["response"] == "Stock count updated for existing entry!!") {
             console.log(data["response"]);
-            alert("Stock In entry added!!")
-            window.location.href = 'index.html';
+            $("#indexPgmodelMsg").html("Stock In entry added!!");
+            setTimeout(function(){ 
+                $("#indexPgRedirectionPopup").modal("show");
+            }, 500);
         } else {
-            alert("Update stock count failed!!");
+            $("#modelMsg").html("Update stock count failed!!");
+            setTimeout(function(){
+                $("#alertPopup").modal("show");
+            }, 500);  
         }
     }
 }

@@ -13,6 +13,17 @@ $( document ).ready(function() {
             optionHtml += '<option value="'+dbData[record]["model_number"]+'">'+dbData[record]["model_number"]+'</option>';
         }
         $("#model_no_id").html(optionHtml);
+        /* This block will remove duplicate options from the UI (copied from net) - start*/
+        let map = {};
+        $('#model_no_id option').each(function () {
+            if (map[this.value]) 
+                $(this).remove();
+            map[this.value] = true;
+        });
+        /* This block will remove duplicate options from the UI (copied from net) - start*/
+        setTimeout(function(){ 
+            $("#loadingPopup").modal("hide");
+        }, 500);
     }
 });
 
@@ -44,7 +55,6 @@ function confirmBtnClick() {
         $("#model_color_id").attr("disabled", "true");
         modelTypeChange();
     }
-
 }
 
 function modelTypeChange() {

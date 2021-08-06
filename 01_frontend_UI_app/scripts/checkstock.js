@@ -4,6 +4,9 @@ $( document ).ready(function() {
     genericApiCalls("GET", "/getAvailableStocks", payload, avlbStocksSuccesscb, errorcb)
 
     function avlbStocksSuccesscb(data) {
+        setTimeout(function(){ 
+            $("#loadingPopup").modal("hide");
+        }, 500);
         console.log(data);
 
         let dataSet = [];
@@ -20,8 +23,10 @@ $( document ).ready(function() {
         }
 
         if(dataSet.length == 0) {
-            alert("No data available!!")
-            window.location.href = 'index.html';
+            $("#indexPgmodelMsg").html("No data available!!");
+            setTimeout(function(){ 
+                $("#indexPgRedirectionPopup").modal("show");
+            }, 500);
         }
 
         $('#available_stocks_tbl').DataTable( {
@@ -35,12 +40,4 @@ $( document ).ready(function() {
             ]
         } );
     }
-
-    function errorcb(jqXHR, textStatus, errorThrown) {
-        alert("Fetching data from database failed!!");
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-    }
-
 });
