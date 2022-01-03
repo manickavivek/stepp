@@ -12,20 +12,26 @@ app.use(function(req, res, next) {
 
 app.use(express.json());
 
-app.post('/addProduct', function (req, res) {
+app.post('/product', function (req, res) {
     MongoClient.connect(mongodbUrl, function(err, db) {
         if (err) throw err;        
         var dbo = db.db("stepp_db");
-        let proObj = {
+        let searchProObj = {
             "model": req["body"]["model"],
             "size": req["body"]["size"],
             "color": req["body"]["color"]
         };
+        let addProObj = {
+            "model": req["body"]["model"],
+            "size": req["body"]["size"],
+            "color": req["body"]["color"],
+            "count": req["body"]["count"]
+        };
 
-        dbo.collection("products").find(proObj).toArray(function(err, result) {
+        dbo.collection("products").find(searchProObj).toArray(function(err, result) {
             if (err) throw err;
             if(result.length == 0) {
-                dbo.collection("products").insertOne(proObj,
+                dbo.collection("products").insertOne(addProObj,
                 function(err, result) {
                     if (err) throw err;
                     if(result["acknowledged"] == true) {
@@ -37,6 +43,18 @@ app.post('/addProduct', function (req, res) {
                 res.json({"response": "Product Already Exist!!"});
                 db.close();
             }
+        });
+    });
+});
+
+app.get('/product', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("stepp_db");
+        dbo.collection("products").find({}).toArray(function(err, result) {
+            if (err) throw err;
+            res.json({"response": result});
+            db.close();
         });
     });
 });
@@ -63,6 +81,75 @@ app.get('/getColors', function (req, res) {
             db.close();
         });
     });
+});
+
+app.post('/stockin', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;        
+        var dbo = db.db("stepp_db");
+        dbo.collection("stock_in").insertMany(req["body"], function(err, result) {
+            if (err) throw err;
+            if(result["acknowledged"] == true) {
+                res.json({"response": "Stock_in collection updated successfully!!"});
+            }
+            db.close();
+        });
+    });
+});
+
+app.post('/transactions', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        let transactionsObj = {};
+        transactionsObj["date"] = new Date(req["body"]["date"]);
+        transactionsObj["type"] = req["body"]["type"];
+        transactionsObj["bill_no"] = req["body"]["bill_no"];
+        transactionsObj["description"] = req["body"]["description"];
+        transactionsObj["income"] = req["body"]["income"];
+        transactionsObj["expense"] = req["body"]["expense"];
+        var dbo = db.db("stepp_db");
+        dbo.collection("transactions").insertOne(transactionsObj, function(err, result) {
+            if (err) throw err;
+            if(result["acknowledged"] == true) {
+                res.json({"response": "transactions collection updated successfully!!"});
+            }
+            db.close();
+        });
+    });
+});
+
+app.post('/productCountUpdate', function (req, res) {
+    let totalDataArr = req["body"]["updatedData"];
+    updatedData();
+
+    function updatedData() {
+        if(req["body"]["type"] == "stock_in") {
+            let queryObj = {};
+            queryObj["model"] = totalDataArr[0]["model"];
+            queryObj["size"] = totalDataArr[0]["size"];
+            queryObj["color"] = totalDataArr[0]["color"];
+            let incValue = parseInt(totalDataArr[0]["count"]);
+            let incValueObj = { $inc: { "count" : incValue } };
+            MongoClient.connect(mongodbUrl, function(err, db) {
+                if (err) throw err;
+                var dbo = db.db("stepp_db");
+                dbo.collection("products").findOneAndUpdate(queryObj, incValueObj, function(err, result) {
+                    if (err) throw err;
+                    if(result["ok"] == 1) {
+                        totalDataArr.shift();
+                    }
+                    db.close();
+                    if(totalDataArr.length == 0) {
+                        res.json({"response": "products collection's counts updated successfully!!"});
+                    } else {
+                        updatedData();
+                    }
+                });
+            });
+        } else {
+            //TBD
+        }
+    }
 });
 
 // app.post('/addTransaction', function (req, res) {

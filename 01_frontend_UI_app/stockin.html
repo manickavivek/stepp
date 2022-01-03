@@ -12,6 +12,7 @@
         <script src="scripts/stockin.js"></script>
     </head>
     <style>
+      svg { cursor: pointer; }
     </style>
     <body>
         <div class="jumbotron text-center" style="padding: 1%;">
@@ -20,103 +21,43 @@
         <div class="container">
             <form>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model*</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="model_no_id" placeholder="Enter model name/number">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Type*</label>
-                  <div class="col-sm-10">
-                    <select id="model_type_id" onchange="modelTypeChange()" class="form-control">
-                      <option value="standard">Standard</option>
-                      <option value="customized">Customized</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Size*</label>
-                  <div class="col-sm-10">
-                    <select id="model_size_id" class="form-control">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
-                      <option value="13">13</option>
-                      <option value="14">14</option>
-                      <option value="15">15</option>
-                      <option value="16">16</option>
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Model Color*</label>
-                  <div class="col-sm-10">
-                    <select id="model_color_id" class="form-control">
-                      <option value="Black">Black</option>
-                      <option value="Cherry">Cherry</option>
-                      <option value="Brown">Brown</option>
-                      <option value="Sandal/Tan">Sandal/Tan</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Rate Per Piece*</label>
-                  <div class="col-sm-10">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">₹</div>
-                      </div>
-                      <input type="text" class="form-control" id="model_rate_per_piece_id" placeholder="Enter rate per piece">
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Stock-in Date*</label>
-                  <div class="col-sm-10">
-                    <input type="datetime-local" class="form-control" id="txn_date_id">
-                  </div>
-                </div>
-                <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Bill Number*</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="txn_bill_no_id" placeholder="Enter bill number">
+                    <input type="text" class="form-control" id="bill_no" placeholder="Enter bill number">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Total Quantity*</label>
+                  <label class="col-sm-2 col-form-label">Bill Date*</label>
                   <div class="col-sm-10">
-                    <input type="number" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" class="form-control" id="txn_quantity_id" placeholder="Enter total number of pieces stocked up">
+                    <input type="date" class="form-control" id="bill_date" placeholder="yyyy-mm-dd">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Customization Cost</label>
+                  <label class="col-sm-2 col-form-label">Bill Amount*</label>
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
                         <div class="input-group-text">₹</div>
                       </div>
-                      <input type="text" class="form-control" id="customization_cost_id" placeholder="Enter customization cost">
+                      <input type="text" class="form-control" id="bill_amt" readonly="true" placeholder="Total bill amount">
                     </div>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Comments</label>
-                  <div class="col-sm-10">
-                    <textarea class="form-control" rows="3" id="comments_id" placeholder="Enter comments (if any)"></textarea>
-                  </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 18%; padding-left: 18px;">Model*</th>
+                      <th style="width: 18%; padding-left: 18px;">Size*</th>
+                      <th style="width: 18%; padding-left: 18px;">Color*</th>
+                      <th style="width: 18%; padding-left: 18px;">Quantity*</th>
+                      <th style="width: 18%; padding-left: 18px;">Amount*</th>
+                      <th style="width: 10%; padding-left: 18px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="prdTbl"></tbody>
+                </table>
+                <div style="float: left;">
+                  <button type="button" class="btn btn-primary" onclick="addRow()">Add</button>
                 </div>
                 <div style="float: right;">
                   <button type="button" class="btn btn-primary" onclick="stockinBtnClick()">Submit</button>
