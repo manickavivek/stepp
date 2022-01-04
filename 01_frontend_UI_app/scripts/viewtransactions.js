@@ -1,13 +1,5 @@
 $( document ).ready(function() {
 
-    // let payload = {};
-    // genericApiCalls("GET", "/product", payload, getProductsSuccesscb, errorcb)
-
-    // function getProductsSuccesscb(data) {
-    //     setTimeout(function(){ 
-    //         $("#loadingPopup").modal("hide");
-    //     }, 500);
-    //     console.log(data);
 });
 
 function getTxns() {
@@ -47,12 +39,12 @@ function getTxns() {
         $('#transacrions_tbl').DataTable({
             data: dataSet,
             columns: [
-                { title: "Date", width: '10%' },
-                { title: "Category", width: '15%' },
-                { title: "Bill", width: '10%' },
+                { title: "Date", width: '10%', className: "text-center" },
+                { title: "Category", width: '15%', className: "text-center" },
+                { title: "Bill No.", width: '10%', className: "text-center" },
                 { title: "Description", width: '45%' },
-                { title: "Income", width: '10%' },
-                { title: "Expense", width: '10%' }
+                { title: "Income", width: '10%', className: "text-center" },
+                { title: "Expense", width: '10%', className: "text-center" }
             ]
         });
 

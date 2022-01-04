@@ -31,10 +31,10 @@ $( document ).ready(function() {
         $('#prd_inventory_tbl').DataTable( {
             data: dataSet,
             columns: [
-                { title: "Model" },
-                { title: "Size" },
-                { title: "Color" },
-                { title: "Availabe stock" }
+                { title: "Model", width: '25%', className: "text-center" },
+                { title: "Size", width: '25%', className: "text-center" },
+                { title: "Color", width: '25%', className: "text-center" },
+                { title: "Availabe stock", width: '25%', className: "text-center" }
             ]
         } );
     }

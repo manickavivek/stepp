@@ -9,14 +9,14 @@
         <script src="scripts/libs/popper.min.js"></script>
         <script src="scripts/libs/bootstrap.min.js"></script>
         <script src="scripts/common.js"></script>
-        <script src="scripts/stockin.js"></script>
+        <script src="scripts/scan.js"></script>
     </head>
     <style>
       svg { cursor: pointer; }
     </style>
     <body>
         <div class="jumbotron text-center" style="padding: 1%;">
-            <h1>STEPP - STOCK IN</h1>
+            <h1>STEPP - SCAN</h1>
         </div>
         <div class="container">
             <form>
@@ -27,40 +27,30 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Bill Date*</label>
+                  <label class="col-sm-2 col-form-label">Date*</label>
                   <div class="col-sm-10">
-                    <input type="date" class="form-control" style="width: 24%;" id="bill_date" placeholder="yyyy-mm-dd">
+                    <input type="date" class="form-control" style="width: 24%;" id="date" placeholder="yyyy-mm-dd">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Bill Amount*</label>
+                  <label class="col-sm-2 col-form-label">Description*</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="description" placeholder="Enter description"></textarea>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Amount*</label>
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
                         <div class="input-group-text">₹</div>
                       </div>
-                      <input type="text" class="form-control" id="bill_amt" readonly="true" placeholder="Total bill amount">
+                      <input type="text" class="form-control" onkeydown="rateInputHandle(event, this)" id="amount" placeholder="Enter amount">
                     </div>
                   </div>
                 </div>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th style="width: 18%; padding-left: 18px;">Model*</th>
-                      <th style="width: 18%; padding-left: 18px;">Size*</th>
-                      <th style="width: 18%; padding-left: 18px;">Color*</th>
-                      <th style="width: 18%; padding-left: 18px;">Quantity*</th>
-                      <th style="width: 18%; padding-left: 18px;">Amount*</th>
-                      <th style="width: 10%; padding-left: 18px;"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="prdTbl"></tbody>
-                </table>
-                <div style="float: left;">
-                  <button type="button" class="btn btn-primary" onclick="addRow()">Add</button>
-                </div>
                 <div style="float: right;">
-                  <button type="button" class="btn btn-primary" onclick="stockinBtnClick()">Submit</button>
+                  <button type="button" class="btn btn-primary" onclick="submitScanTxn()">Submit</button>
                   <a id="go_back_id" href="index.html" class="btn btn-primary">Go Back</a>
                 </div>
             </form>
