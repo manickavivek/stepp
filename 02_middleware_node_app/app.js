@@ -152,6 +152,21 @@ app.post('/productCountUpdate', function (req, res) {
     }
 });
 
+app.post('/getTransactions', function (req, res) {
+    let from = new Date(req["body"]["from"]);
+    let to = new Date(req["body"]["to"]);
+    let queryObj = { date: { $gte: from, $lte: to } };
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("stepp_db");
+        dbo.collection("transactions").find(queryObj).toArray(function(err, result) {
+            if (err) throw err;
+            res.json({"response": result});
+            db.close();
+        });
+    });
+});
+
 // app.post('/addTransaction', function (req, res) {
 //     MongoClient.connect(mongodbUrl, function(err, db) {
 //         if (err) throw err;        

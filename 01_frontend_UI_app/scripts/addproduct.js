@@ -47,7 +47,7 @@ function addProductBtnClick() {
     addPrdPayload["count"] = 0;
 
     console.log("Calling addProduct API..");
-    genericApiCalls("POST", "/product", addPrdPayload, addPrdSuccesscb, errorcb)
+    genericApiCalls("POST", "/product", addPrdPayload, addPrdSuccesscb, errorcb);
 
     function addPrdSuccesscb(data) {
         if(data["response"] == "Product Added!!" || data["response"] == "Product Already Exist!!") {

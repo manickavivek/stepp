@@ -11,19 +11,34 @@
         <script src="scripts/libs/bootstrap.min.js"></script>
         <script src="scripts/libs/jquery.dataTables.min.js"></script>
         <script src="scripts/common.js"></script>
-        <script src="scripts/checkstock.js"></script>
+        <script src="scripts/viewtransactions.js"></script>
     </head>
     <style>
     </style>
     <body>
         <div class="jumbotron text-center" style="padding: 1%;">
-            <h1>STEPP - STOCK AVAILABILITY</h1>
+            <h1>STEPP - TRANSACTIONS</h1>
         </div>
         <div class="container">
-            <table id="available_stocks_tbl" class="display" width="100%"></table>
+            <form>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">From Date*</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="from_date">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">To Date*</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="to_date">
+                    </div>
+                </div>
+            </form>
             <div style="float: right; margin: 2%;">
+                <button id="get_txn_btn" type="button" class="btn btn-primary" onclick="getTxns()">Get Transactions</button>
                 <a id="go_back_id" href="index.html" class="btn btn-primary">Go Back</a>
-              </div>
+            </div>
+            <table id="transacrions_tbl" class="display" width="100%"></table>
         </div>
     </body>
 </html>

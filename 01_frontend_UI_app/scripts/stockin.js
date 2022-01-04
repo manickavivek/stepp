@@ -11,24 +11,6 @@ $( document ).ready(function() {
     }
 });
 
-function rateInputHandle(event, thisObj) {
-    if (event.shiftKey == true) {
-        event.preventDefault();
-    }
-    if ((event.keyCode >= 48 && event.keyCode <= 57) || 
-        (event.keyCode >= 96 && event.keyCode <= 105) || 
-        event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
-        event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
-        //Do nothing
-    } else {
-        event.preventDefault();
-    }
-    if($("#"+thisObj.id).val().indexOf('.') !== -1 && event.keyCode == 190) {
-        event.preventDefault();
-        //if a decimal has been added, disable the "."-button
-    }
-}
-
 function totalBillAmtCalculator() {
     let totalBillAmt = 0;
     $($('[id^="amount_"]')).each(function(index) {
@@ -188,6 +170,20 @@ function stockinBtnClick() {
 
         }
     }
+
+    let duplicateCheckerArr = [];
+    for(let prodDate in stockInPayloadArr) {
+        let chk_model = stockInPayloadArr[prodDate]["model"];
+        let chk_size = stockInPayloadArr[prodDate]["size"];
+        let chk_color = stockInPayloadArr[prodDate]["color"];
+        duplicateCheckerArr.push(chk_model+chk_size+chk_color);
+    }
+    if(arrDuplicatesChecker(duplicateCheckerArr)) {
+        $("#modelMsg").html("Duplicate product entries not allowed!!");
+        $("#alertPopup").modal("show");
+        return;
+    }
+
     // 1. insertMany into stockin collection - stockInPayloadArr
     genericApiCalls("POST", "/stockin", stockInPayloadArr, stockinSuccesscb, errorcb);
     function stockinSuccesscb(data) {
@@ -196,7 +192,7 @@ function stockinBtnClick() {
         transactionsPayloadObj["date"] = billDate;
         transactionsPayloadObj["type"] = "Stock In";
         transactionsPayloadObj["bill_no"] = billNumber;
-        transactionsPayloadObj["description"] = "NA";
+        transactionsPayloadObj["description"] = "Stock purchase";
         transactionsPayloadObj["income"] = 0;
         transactionsPayloadObj["expense"] = billAmt;
         // 2. insert into transactions collection - transactionsPayloadObj
@@ -226,5 +222,3 @@ function stockinBtnClick() {
         }
     }
 }
-
-
