@@ -1,176 +1,313 @@
-let availableStock = "";
+let dynamicRowNo = 0;
+let prodLists = [];
 $( document ).ready(function() {
-    $("#second_section_id").hide();
-    $("#submit_id").hide();
-    let payload = {};
-    genericApiCalls("GET", "/getAvailableStocks", payload, avlbStocksSuccesscb, errorcb)
-
-    function avlbStocksSuccesscb(data) {
-        let optionHtml = "";
-        availableStock = data["response"];
-        let dbData = data["response"];
-        for(let record in dbData) {
-            optionHtml += '<option value="'+dbData[record]["model_number"]+'">'+dbData[record]["model_number"]+'</option>';
-        }
-        $("#model_no_id").html(optionHtml);
-        /* This block will remove duplicate options from the UI (copied from net) - start*/
-        let map = {};
-        $('#model_no_id option').each(function () {
-            if (map[this.value]) 
-                $(this).remove();
-            map[this.value] = true;
-        });
-        /* This block will remove duplicate options from the UI (copied from net) - start*/
+    genericApiCalls("GET", "/product", "", getProductsSuccesscb, errorcb);
+    function getProductsSuccesscb(data) {
         setTimeout(function(){ 
             $("#loadingPopup").modal("hide");
         }, 500);
+        console.log(data);
+        prodLists = data["response"];
     }
-
-    $("#model_rate_per_piece_id").keydown(function (event) {
-        rateInputHandle(event, $(this));
-    });
-
-    $("#customization_cost_id").keydown(function (event) {
-        rateInputHandle(event, $(this));
-    });
-
-    $("#discounts_id").keydown(function (event) {
-        rateInputHandle(event, $(this));
-    });
 });
 
-function confirmBtnClick() {
-    let modelNoInp = ($("#model_no_id").val()).trim();
-    let modelTypInp = $("#model_type_id").val();
-    let modelSizInp = $("#model_size_id").val();
-    let modelClrInp = $("#model_color_id").val();
-    let avlStockCount = 0;
-    for(let record in availableStock) {
-        let recordLoop = availableStock[record];
-        if(modelNoInp == recordLoop["model_number"] && modelTypInp == recordLoop["model_type"] && modelSizInp == recordLoop["model_size"] && modelClrInp == recordLoop["model_color"]) {
-            if(recordLoop["available_count"] <= 0) {
-                //do nothing
-            } else {
-                avlStockCount = recordLoop["available_count"];
+function addRow() {
+    let uniqueNo = dynamicRowNo++;
+    let newTrHtml = "";
+    newTrHtml += '<tr id="tr_'+uniqueNo+'" uniqueid="'+uniqueNo+'">';
+    newTrHtml += '<td>';
+    newTrHtml += '<select class="form-control" id="model_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onModelChange(this)">';
+    newTrHtml += '<option value="NA">NA</option>';
+    let modelArr = [];
+    for(let model in prodLists) {
+        modelArr.push(prodLists[model]["model"]);
+    }
+    let modelUniqueArr = [... new Set(modelArr)];
+    for(let uniModel in modelUniqueArr) {
+        newTrHtml += '<option value="'+modelUniqueArr[uniModel]+'">'+modelUniqueArr[uniModel]+'</option>';
+    }
+    newTrHtml += '</select>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<select class="form-control" id="size_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onSizeChange(this)">';
+    newTrHtml += '<option value="NA">NA</option>';
+    newTrHtml += '</select>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<select class="form-control" id="color_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onColorChange(this)">';
+    newTrHtml += '<option value="NA">NA</option>';
+    newTrHtml += '</select>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<select class="form-control" id="cost_type_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onColorChange(this)">';
+    newTrHtml += '<option value="NA">NA</option>';
+    newTrHtml += '<option value="base">Base</option>';
+    newTrHtml += '<option value="custom">Custom</option>';
+    newTrHtml += '</select>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<input class="form-control" id="quantity_'+uniqueNo+'" type="number" min="1" max="1" placeholder="max 1" onkeypress="onQuantityKeyPress(event)" oncopy="return false" onpaste="return false" onchange="onQuantityChange(this)"/>'
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<div class="input-group">';
+    newTrHtml += '<div class="input-group-prepend">';
+    newTrHtml += '<div class="input-group-text">₹</div>';
+    newTrHtml += '</div>';
+    newTrHtml += '<input class="form-control" id="purchase_amount_'+uniqueNo+'" type="text" onkeydown="rateInputHandle(event, this)" placeholder="Enter amount"/>'
+    newTrHtml += '</div>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<div class="input-group">';
+    newTrHtml += '<div class="input-group-prepend">';
+    newTrHtml += '<div class="input-group-text">₹</div>';
+    newTrHtml += '</div>';
+    newTrHtml += '<input class="form-control" id="sale_amount_'+uniqueNo+'" type="text" onkeydown="rateInputHandle(event, this)" onkeyup="totalBillAmtCalculator()" placeholder="Enter amount"/>'
+    newTrHtml += '</div>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<svg id="delete_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onclick="onDeletBtnClick(this); totalBillAmtCalculator()" xmlns="http://www.w3.org/2000/svg" style="margin-top: 7px" width="25" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>';
+    newTrHtml += "</td>";
+    newTrHtml += "</tr>";
+    $("#prdTbl").append(newTrHtml);
+}
+
+function totalBillAmtCalculator() {
+    let totalBillAmt = 0;
+    $($('[id^="sale_amount_"]')).each(function(index) {
+        if($(this).val() == "") {
+            //Do Nothing
+        } else {
+            totalBillAmt = totalBillAmt + parseFloat($(this).val());
+        }
+    });
+    $("#bill_amt").val(totalBillAmt);
+}
+
+// function onCostTypeChange(obj) {
+//     let chosenCostType = $("#"+obj["id"]).val();
+//     if(chosenCostType == "NA" || chosenCostType == "base") {
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', '1');
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'max 1');
+//     } else {
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
+//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
+//     }
+// }
+
+function onModelChange(obj) {
+    let chosenModel = $("#"+obj["id"]).val();
+    $("#size_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    if(chosenModel == "NA") {
+        //Do Nothing
+    } else {
+        let sizeArr = [];
+        for(let size in prodLists) {
+            if(prodLists[size]["model"] == chosenModel) {
+                sizeArr.push(prodLists[size]["size"]);
+            }
+        }
+        let sizeUniqueArr = [... new Set(sizeArr)];
+        let sizeOptHtml = '<option value="NA">NA</option>';
+        for(let uniSize in sizeUniqueArr) {
+            sizeOptHtml += '<option value="'+sizeUniqueArr[uniSize]+'">'+sizeUniqueArr[uniSize]+'</option>';
+        }
+        $("#size_"+$('#'+obj["id"]).attr('uniqueid')).html(sizeOptHtml);
+    }
+}
+
+function onSizeChange(obj) {
+    let chosenModel = $("#model_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenSize = $("#"+obj["id"]).val();
+    $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    if(chosenModel == "NA" || chosenSize == "NA") {
+        //Do Nothing
+    } else {
+        let colorArr = [];
+        let colorOptHtml = '<option value="NA">NA</option>';
+        for(let color in prodLists) {
+            if(prodLists[color]["model"] == chosenModel && prodLists[color]["size"] == chosenSize) {
+                colorOptHtml += '<option value="'+prodLists[color]["color"]+'">'+prodLists[color]["color"]+'</option>';
+            }
+        }
+        $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html(colorOptHtml);
+    }
+}
+
+function onColorChange(obj) {
+    let chosenModel = $("#model_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenSize = $("#size_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenColor = $("#color_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenCostType = $("#cost_type_"+$('#'+obj["id"]).attr('uniqueid')).val();
+
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', '1');
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'max 1');
+
+    if(chosenModel == "NA" || chosenSize == "NA" || chosenColor == "NA") {
+        //Do Nothing
+    } else {
+        for(let avlCount in prodLists) {
+            if(prodLists[avlCount]["model"] == chosenModel && prodLists[avlCount]["size"] == chosenSize && prodLists[avlCount]["color"] == chosenColor) {
+                if(prodLists[avlCount]["count"] == 0  || chosenCostType == "custom") {
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
+                } else {
+                    let maxValStr = (prodLists[avlCount]["count"]).toString();
+                    let maxValStrPl = "max "+maxValStr;
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', maxValStr);
+                    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', maxValStrPl);
+                }
             }
         }
     }
-    if(avlStockCount == 0) {
-        alert("No stock availabe in store for the this product!!")
-    } else {
-        $("#second_section_id").show();
-        $("#available_count_id").html(avlStockCount);
-        $("#submit_id").show();
-        $("#confirm_id").hide();
-        $("#model_no_id").attr("disabled", "true");
-        $("#model_type_id").attr("disabled", "true");
-        $("#model_size_id").attr("disabled", "true");
-        $("#model_color_id").attr("disabled", "true");
-        modelTypeChange();
+}
+
+function onQuantityChange(obj) {
+    let usrEnteredQuantity = parseInt($("#"+obj["id"]).val());
+    let maxQuantity = parseInt($("#"+obj["id"]).attr("max"));
+    if(usrEnteredQuantity > maxQuantity) {
+        $("#"+obj["id"]).val("");
+        $("#modelMsg").html("Entered quantity is not available!!");
+        $("#alertPopup").modal("show");
+    } else if(usrEnteredQuantity == 0) {
+        $("#"+obj["id"]).val("");
+        $("#modelMsg").html("0 cannot be entered for quantity!!");
+        $("#alertPopup").modal("show");
     }
 }
 
-function modelTypeChange() {
-    if($("#model_type_id").val() == "standard") {
-        $("#customization_cost_id").val("NA").prop('readonly', true);
-    } else {
-        $("#customization_cost_id").val("").prop('readonly', false);
-    }
+function onDeletBtnClick(obj) {
+    let chosenRow = $('#'+obj["id"]).attr('uniqueid');
+    $("#tr_"+chosenRow).remove();
 }
 
-function stocksaleBtnClick() {
-
-    let modelNoInp = ($("#model_no_id").val()).trim();
-    let modelTypInp = $("#model_type_id").val();
-    let modelSizInp = $("#model_size_id").val();
-    let modelClrInp = $("#model_color_id").val();
-    let modelRteppInp = $("#model_rate_per_piece_id").val();
-    let txnDateInp = $("#txn_date_id").val()+":00Z";
-    let billNoInp = ($("#txn_bill_no_id").val()).trim();
-    let txnQuanInp = $("#txn_quantity_id").val();
-    let discountsInp = $("#discounts_id").val();
-    let custCostInp = $("#customization_cost_id").val();
-    let commentsInp = ($("#comments_id").val()).trim();
-
-    if(modelNoInp == "" || modelRteppInp == "" || txnDateInp == ":00Z" || billNoInp == "" || txnQuanInp == "" || discountsInp == "") {
-        $("#modelMsg").html("Enter all mandatory inputs!!");
+function stockSaleBtnClick() {
+    let billNumber = $("#bill_no").val();
+    let billDate = $("#bill_date").val();
+    let billAmt = $("#bill_amt").val();
+    if(billNumber == "" || billDate == "" || billAmt == "") {
+        $("#modelMsg").html("Please enter all mandatory fields!!");
         $("#alertPopup").modal("show");
         return;
     }
 
-    if(modelTypInp == "customized") {
-        if(custCostInp == "") {
-            $("#modelMsg").html("Enter customization cost!!");
+    let tblUniIdArr = [];
+    $($('[id^="tr_"]')).each(function(trIndex) {
+        tblUniIdArr.push($(this).attr("uniqueid"));
+    });
+
+    let stockSalePayloadArr = [];
+    for(let stock in tblUniIdArr) {
+        let stockSalePayloadObj = {};
+        if($("#model_"+tblUniIdArr[stock]).val() == "NA") {
+            $("#modelMsg").html("Please enter model for all rows!!");
             $("#alertPopup").modal("show");
             return;
+        } else {
+            stockSalePayloadObj["bill_no"] = billNumber;
+            stockSalePayloadObj["date"] = billDate;
+            stockSalePayloadObj["model"] = $("#model_"+tblUniIdArr[stock]).val();
+            if($("#size_"+tblUniIdArr[stock]).val() == "NA") {
+                $("#modelMsg").html("Please enter size for all rows!!");
+                $("#alertPopup").modal("show");
+                return;
+            } else {
+                stockSalePayloadObj["size"] = $("#size_"+tblUniIdArr[stock]).val();
+                if($("#color_"+tblUniIdArr[stock]).val() == "NA") {
+                    $("#modelMsg").html("Please enter color for all rows!!");
+                    $("#alertPopup").modal("show");
+                    return;
+                } else {
+                    stockSalePayloadObj["color"] = $("#color_"+tblUniIdArr[stock]).val();
+                    if($("#cost_type_"+tblUniIdArr[stock]).val() == "NA") {
+                        $("#modelMsg").html("Please enter cost type for all rows!!");
+                        $("#alertPopup").modal("show");
+                        return;
+                    } else {
+                        stockSalePayloadObj["cost_type"] = $("#cost_type_"+tblUniIdArr[stock]).val();
+                        if($("#quantity_"+tblUniIdArr[stock]).val() == "") {
+                            stockSalePayloadObj["quantity"] = "NA";
+                        } else {
+                            stockSalePayloadObj["quantity"] = $("#quantity_"+tblUniIdArr[stock]).val();
+                        }
+                        if($("#purchase_amount_"+tblUniIdArr[stock]).val() == "") {
+                            $("#modelMsg").html("Please enter purchase amount for all rows!!");
+                            $("#alertPopup").modal("show");
+                            return;
+                        } else {
+                            stockSalePayloadObj["purchase_rate"] = $("#purchase_amount_"+tblUniIdArr[stock]).val();
+                            if($("#sale_amount_"+tblUniIdArr[stock]).val() == "") {
+                                $("#modelMsg").html("Please enter sale amount for all rows!!");
+                                $("#alertPopup").modal("show");
+                                return;
+                            } else {
+                                stockSalePayloadObj["sale_rate"] = $("#sale_amount_"+tblUniIdArr[stock]).val();
+                                stockSalePayloadArr.push(stockSalePayloadObj);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    if(parseInt($("#available_count_id").html()) < parseInt(txnQuanInp)) {
-        $("#modelMsg").html("Entered quantity is not available in store!!");
+    let duplicateCheckerArr = [];
+    for(let prodDate in stockSalePayloadArr) {
+        let chk_model = stockSalePayloadArr[prodDate]["model"];
+        let chk_size = stockSalePayloadArr[prodDate]["size"];
+        let chk_color = stockSalePayloadArr[prodDate]["color"];
+        let chk_costType = stockSalePayloadArr[prodDate]["cost_type"];
+        duplicateCheckerArr.push(chk_model+chk_size+chk_color+chk_costType);
+    }
+    if(arrDuplicatesChecker(duplicateCheckerArr)) {
+        $("#modelMsg").html("Duplicate product entries not allowed!!");
         $("#alertPopup").modal("show");
         return;
     }
 
-    let confirmation = confirm("Are you sure to update the stock inventory??");
-    if (confirmation == false) {
-        return;
-    }
-
-    let addStockTxnPayload = {};
-    addStockTxnPayload["model_number"] = modelNoInp;
-    addStockTxnPayload["model_type"] = modelTypInp;
-    addStockTxnPayload["model_size"] = modelSizInp;
-    addStockTxnPayload["model_color"] = modelClrInp;
-    addStockTxnPayload["model_rate_per_piece"] = modelRteppInp;
-    addStockTxnPayload["txn_type"] = "stock sale";
-    addStockTxnPayload["txn_income"] = (parseInt(modelRteppInp)*parseInt(txnQuanInp)) - parseInt(discountsInp);
-    addStockTxnPayload["txn_expense"] = "NA";
-    addStockTxnPayload["txn_date"] = txnDateInp;
-    addStockTxnPayload["txn_bill_no"] = billNoInp;
-    addStockTxnPayload["txn_quantity"] = txnQuanInp;
-    addStockTxnPayload["discounts"] = discountsInp;
-    addStockTxnPayload["customization_cost"] = custCostInp;
-    addStockTxnPayload["comments"] = commentsInp
-
-    console.log("Calling addStockTransaction API..");
-    genericApiCalls("POST", "/addStockTransaction", addStockTxnPayload, addStockTxnSuccesscb, errorcb)
-
-    function addStockTxnSuccesscb(data) {
-        if(data["response"] == "Transaction Updated!!") {
-            console.log(data["response"]);
-
-            let updateStockCountPayload = {};
-            updateStockCountPayload["model_number"] = modelNoInp;
-            updateStockCountPayload["model_type"] = modelTypInp;
-            updateStockCountPayload["model_size"] = modelSizInp;
-            updateStockCountPayload["model_color"] = modelClrInp;
-            updateStockCountPayload["update_type"] = "remove";
-            updateStockCountPayload["update_count"] = parseInt(txnQuanInp);
-
-            console.log("Calling updateStockCount API..");
-            genericApiCalls("POST", "/updateStockCount", updateStockCountPayload, updateStockCountSuccesscb, errorcb)
-        } else {
-            $("#modelMsg").html("Stock sale txn failed!!");
-            $("#alertPopup").modal("show");
-        }
-    }
-
-    function updateStockCountSuccesscb(data) {
-        setTimeout(function(){ 
-            $("#loadingPopup").modal("hide");
-        }, 500);
-        if(data["response"] == "Stock count updated for new entry!!" || data["response"] == "Stock count updated for existing entry!!") {
-            console.log(data["response"]);
-            $("#indexPgmodelMsg").html("Stock sale entry added!!");
-            setTimeout(function(){ 
-                $("#indexPgRedirectionPopup").modal("show");
-            }, 500);
-        } else {
-            $("#modelMsg").html("Update stock count failed!!");
-            setTimeout(function(){
-                $("#alertPopup").modal("show");
-            }, 500);
+    // 1. insertMany into stock_sale collection - stockSalePayloadArr
+    genericApiCalls("POST", "/stocksale", stockSalePayloadArr, stockSaleSuccesscb, errorcb);
+    function stockSaleSuccesscb(data) {
+        console.log(data);
+        let transactionsPayloadObj = {};
+        transactionsPayloadObj["date"] = billDate;
+        transactionsPayloadObj["type"] = "Stock Sale";
+        transactionsPayloadObj["bill_no"] = billNumber;
+        transactionsPayloadObj["description"] = "Stock sale to customer";
+        transactionsPayloadObj["income"] = billAmt;
+        transactionsPayloadObj["expense"] = 0;
+        // 2. insert into transactions collection - transactionsPayloadObj
+        genericApiCalls("POST", "/transactions", transactionsPayloadObj, transactionsSuccesscb, errorcb);
+        function transactionsSuccesscb(data) {
+            console.log(data);
+            let prdCountPayloadArr = [];
+            for(let countLoop in stockSalePayloadArr) {
+                let prdCountPayloadObj = {};
+                if(stockSalePayloadArr[countLoop]["cost_type"] == "base") {
+                    prdCountPayloadObj["model"] = stockSalePayloadArr[countLoop]["model"];
+                    prdCountPayloadObj["size"] = stockSalePayloadArr[countLoop]["size"];
+                    prdCountPayloadObj["color"] = stockSalePayloadArr[countLoop]["color"];
+                    prdCountPayloadObj["count"] = parseInt(stockSalePayloadArr[countLoop]["quantity"]) * -1;
+                    prdCountPayloadArr.push(prdCountPayloadObj);
+                } else {
+                    //Do Nothing
+                }
+            }
+            let prdCountPayload = {};
+            prdCountPayload["updatedData"] = prdCountPayloadArr;
+            // 3. update count in products collection
+            genericApiCalls("POST", "/productCountUpdate", prdCountPayload, productCountSuccesscb, errorcb);
+            function productCountSuccesscb(data) {
+                $("#indexPgmodelMsg").html("Stock details updated successfuly!!");
+                setTimeout(function(){
+                    $("#indexPgRedirectionPopup").modal("show");
+                }, 500);
+            }
         }
     }
 }

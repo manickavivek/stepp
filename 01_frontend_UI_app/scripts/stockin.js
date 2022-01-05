@@ -51,14 +51,14 @@ function addRow() {
     newTrHtml += '</select>';
     newTrHtml += "</td>";
     newTrHtml += '<td>';
-    newTrHtml += '<input class="form-control" id="quantity_'+uniqueNo+'" type="number" min="1" />'
+    newTrHtml += '<input class="form-control" id="quantity_'+uniqueNo+'" type="number" min="1" placeholder="min 1" onkeypress="onQuantityKeyPress(event)" oncopy="return false" onpaste="return false" onchange="onQuantityChange(this)"/>'
     newTrHtml += "</td>";
     newTrHtml += '<td>';
     newTrHtml += '<div class="input-group">';
     newTrHtml += '<div class="input-group-prepend">';
     newTrHtml += '<div class="input-group-text">₹</div>';
     newTrHtml += '</div>';
-    newTrHtml += '<input class="form-control" id="amount_'+uniqueNo+'" type="text" onkeydown="rateInputHandle(event, this)" onchange="totalBillAmtCalculator()" placeholder="Enter amount"/>'
+    newTrHtml += '<input class="form-control" id="amount_'+uniqueNo+'" type="text" onkeydown="rateInputHandle(event, this)" onkeyup="totalBillAmtCalculator()" placeholder="Enter amount"/>'
     newTrHtml += '</div>';
     newTrHtml += "</td>";
     newTrHtml += '<td>';
@@ -113,6 +113,15 @@ function onDeletBtnClick(obj) {
     $("#tr_"+chosenRow).remove();
 }
 
+function onQuantityChange(obj) {
+    let usrEnteredQuantity = parseInt($("#"+obj["id"]).val());
+    if(usrEnteredQuantity == 0) {
+        $("#"+obj["id"]).val("");
+        $("#modelMsg").html("0 cannot be entered for quantity!!");
+        $("#alertPopup").modal("show");
+    }
+}
+
 function stockinBtnClick() {
     let billNumber = $("#bill_no").val();
     let billDate = $("#bill_date").val();
@@ -136,6 +145,7 @@ function stockinBtnClick() {
             $("#alertPopup").modal("show");
             return;
         } else {
+            stockInPayloadObj["date"] = billDate;
             stockInPayloadObj["bill_no"] = billNumber;
             stockInPayloadObj["model"] = $("#model_"+tblUniIdArr[stock]).val();
             if($("#size_"+tblUniIdArr[stock]).val() == "NA") {
@@ -209,7 +219,6 @@ function stockinBtnClick() {
                 prdCountPayloadArr.push(prdCountPayloadObj);
             }
             let prdCountPayload = {};
-            prdCountPayload["type"] = "stock_in";
             prdCountPayload["updatedData"] = prdCountPayloadArr;
             // 3. update count in products collection
             genericApiCalls("POST", "/productCountUpdate", prdCountPayload, productCountSuccesscb, errorcb);

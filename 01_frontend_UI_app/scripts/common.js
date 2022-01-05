@@ -75,6 +75,12 @@ function rateInputHandle(event, thisObj) {
     }
 }
 
+function onQuantityKeyPress(evt) {
+    if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+        evt.preventDefault();
+    }
+}
+
 function errorcb(jqXHR, textStatus, errorThrown) {
     console.log(jqXHR);
     console.log(textStatus);

@@ -97,6 +97,20 @@ app.post('/stockin', function (req, res) {
     });
 });
 
+app.post('/stocksale', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;        
+        var dbo = db.db("stepp_db");
+        dbo.collection("stock_sale").insertMany(req["body"], function(err, result) {
+            if (err) throw err;
+            if(result["acknowledged"] == true) {
+                res.json({"response": "Stock_sale collection updated successfully!!"});
+            }
+            db.close();
+        });
+    });
+});
+
 app.post('/transactions', function (req, res) {
     MongoClient.connect(mongodbUrl, function(err, db) {
         if (err) throw err;
@@ -123,32 +137,28 @@ app.post('/productCountUpdate', function (req, res) {
     updatedData();
 
     function updatedData() {
-        if(req["body"]["type"] == "stock_in") {
-            let queryObj = {};
-            queryObj["model"] = totalDataArr[0]["model"];
-            queryObj["size"] = totalDataArr[0]["size"];
-            queryObj["color"] = totalDataArr[0]["color"];
-            let incValue = parseInt(totalDataArr[0]["count"]);
-            let incValueObj = { $inc: { "count" : incValue } };
-            MongoClient.connect(mongodbUrl, function(err, db) {
+        let queryObj = {};
+        queryObj["model"] = totalDataArr[0]["model"];
+        queryObj["size"] = totalDataArr[0]["size"];
+        queryObj["color"] = totalDataArr[0]["color"];
+        let incValue = parseInt(totalDataArr[0]["count"]);
+        let incValueObj = { $inc: { "count" : incValue } };
+        MongoClient.connect(mongodbUrl, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("stepp_db");
+            dbo.collection("products").findOneAndUpdate(queryObj, incValueObj, function(err, result) {
                 if (err) throw err;
-                var dbo = db.db("stepp_db");
-                dbo.collection("products").findOneAndUpdate(queryObj, incValueObj, function(err, result) {
-                    if (err) throw err;
-                    if(result["ok"] == 1) {
-                        totalDataArr.shift();
-                    }
-                    db.close();
-                    if(totalDataArr.length == 0) {
-                        res.json({"response": "products collection's counts updated successfully!!"});
-                    } else {
-                        updatedData();
-                    }
-                });
+                if(result["ok"] == 1) {
+                    totalDataArr.shift();
+                }
+                db.close();
+                if(totalDataArr.length == 0) {
+                    res.json({"response": "products collection's counts updated successfully!!"});
+                } else {
+                    updatedData();
+                }
             });
-        } else {
-            //TBD
-        }
+        });
     }
 });
 
