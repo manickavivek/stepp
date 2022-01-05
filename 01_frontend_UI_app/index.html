@@ -10,12 +10,17 @@
         <script src="scripts/libs/bootstrap.min.js"></script>
     </head>
     <style>
-        .cardcustomcss {
-            border: solid 1px gray;
-            height: 100%;
+        .card {
+            border-radius: 4px;
+            background: #fff;
+            box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+            transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+            padding: 14px 80px 18px 36px;
+            cursor: pointer;
         }
-        .rowcustomcss {
-            margin-bottom: 1%;
+        .card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
         }
     </style>
     <body>
@@ -23,18 +28,18 @@
             <h1>STEPP HEALTH FOOTWEARS</h1>
         </div>
         <div class="container">
-            <div class="row rowcustomcss">
+            <div class="row ">
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">View Transaction Dashboard</h5>
                             <p class="card-text">View transactions for a particular date range.</p>
-                            <a href="viewtransactions.html" class="btn btn-primary">Check Now</a>
+                            <a href="viewtransactions.html" class="btn btn-primary">View Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">View Availabe Stocks</h5>
                             <p class="card-text">View product inventory and know the availabe stock information.</p>
@@ -43,7 +48,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Add Product</h5>
                             <p class="card-text">Add new product to inventory by specifying the model, size and color.</p>
@@ -52,9 +57,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row rowcustomcss">
+            <div class="row ">
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Stock In</h5>
                             <p class="card-text">Update the incoming product details which was purchased from the dealer.</p>
@@ -63,40 +68,40 @@
                     </div>
                 </div>            
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Stock Sale</h5>
                             <p class="card-text">Update the product details which was sold/delivered to the customer.</p>
-                            <a href="stocksale.html" class="btn btn-primary">Add Now</a>
+                            <a href="stocksale.html" class="btn btn-primary">Update Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Stock Transfer</h5>
                             <p class="card-text">Update the product details which was transferred to other shop/dealers.</p>
-                            <a href="stocktransfer.html" class="btn btn-primary">Add Now</a>
+                            <a href="stocktransfer.html" class="btn btn-primary">Update Now</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row rowcustomcss">
+            <div class="row ">
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Other transactions</h5>
                             <p class="card-text">Update other income/expense transactions.</p>
-                            <a href="othertransactions.html" class="btn btn-primary">Add Now</a>
+                            <a href="othertransactions.html" class="btn btn-primary">Update Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="card cardcustomcss">
+                    <div class="card  shadow-lg p-3 mb-5 bg-white rounded">
                         <div class="card-body">
                             <h5 class="card-title">Scan</h5>
-                            <p class="card-text">Update the scan related transaction.</p>
-                            <a href="scan.html" class="btn btn-primary">Add Now</a>
+                            <p class="card-text">Update the scan related transaction with comments.</p>
+                            <a href="scan.html" class="btn btn-primary">Update Now</a>
                         </div>
                     </div>
                 </div>
