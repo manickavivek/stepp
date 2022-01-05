@@ -40,9 +40,7 @@ function addRow() {
     newTrHtml += "</td>";
     newTrHtml += '<td>';
     newTrHtml += '<select class="form-control" id="cost_type_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onColorChange(this)">';
-    newTrHtml += '<option value="NA">NA</option>';
     newTrHtml += '<option value="base">Base</option>';
-    newTrHtml += '<option value="custom">Custom</option>';
     newTrHtml += '</select>';
     newTrHtml += "</td>";
     newTrHtml += '<td>';
@@ -82,19 +80,6 @@ function totalBillAmtCalculator() {
     });
     $("#bill_amt").val(totalBillAmt);
 }
-
-// function onCostTypeChange(obj) {
-//     let chosenCostType = $("#"+obj["id"]).val();
-//     if(chosenCostType == "NA" || chosenCostType == "base") {
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', '1');
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'max 1');
-//     } else {
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
-//     }
-// }
 
 function onModelChange(obj) {
     let chosenModel = $("#"+obj["id"]).val();
@@ -276,9 +261,9 @@ function stockSaleBtnClick() {
         console.log(data);
         let transactionsPayloadObj = {};
         transactionsPayloadObj["date"] = billDate;
-        transactionsPayloadObj["type"] = "Stock Sale";
+        transactionsPayloadObj["type"] = "Stock Transfer";
         transactionsPayloadObj["bill_no"] = billNumber;
-        transactionsPayloadObj["description"] = "Stock sale to customer";
+        transactionsPayloadObj["description"] = "Stock transferred to other shop/dealer.";
         transactionsPayloadObj["income"] = billAmt;
         transactionsPayloadObj["expense"] = 0;
         // 2. insert into transactions collection - transactionsPayloadObj

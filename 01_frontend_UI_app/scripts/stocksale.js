@@ -83,19 +83,6 @@ function totalBillAmtCalculator() {
     $("#bill_amt").val(totalBillAmt);
 }
 
-// function onCostTypeChange(obj) {
-//     let chosenCostType = $("#"+obj["id"]).val();
-//     if(chosenCostType == "NA" || chosenCostType == "base") {
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', '1');
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'max 1');
-//     } else {
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
-//         $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
-//     }
-// }
-
 function onModelChange(obj) {
     let chosenModel = $("#"+obj["id"]).val();
     $("#size_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
