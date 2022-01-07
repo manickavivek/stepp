@@ -16,14 +16,27 @@
     <style>
     </style>
     <body>
-        <div class="jumbotron text-center" style="padding: 1%;">
-            <h1>STEPP - PRODUCT INVENTORY</h1>
-        </div>
+        <nav class="navbar navbar-expand-sm" style="background-color: lightgrey; margin-bottom: 2%;">
+            <div class="container">
+              <a class="navbar-brand" href="index.html">
+                <img src="imgs/stepp_logo.png" style="width:40px;">
+                <span style="font-family: fantasy; font-style: italic; font-size: 108%; vertical-align: -webkit-baseline-middle; color: black;">Stepp</span>
+              </a>
+            </div>
+        </nav>
         <div class="container">
-            <table id="prd_inventory_tbl" class="display" width="100%"></table>
-            <div style="float: right; margin: 2%;">
-                <a id="go_back_id" href="addproduct.html" class="btn btn-primary">Add a new product</a>
-                <a id="go_back_id" href="index.html" class="btn btn-primary">Go Back</a>
+            <div class="card text-center" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;">
+                <div class="card-header" style="font-weight: bold;">
+                    PRODUCT INVENTORY
+                </div>
+                <div class="card-body">
+                    <table id="prd_inventory_tbl" class="display" width="100%"></table>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="btn-group btn-group-md" style="float: right;" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Home</button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

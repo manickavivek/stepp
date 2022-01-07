@@ -16,27 +16,41 @@
     <style>
     </style>
     <body>
-        <div class="jumbotron text-center" style="padding: 1%;">
-            <h1>STEPP - TRANSACTIONS</h1>
-        </div>
+        <nav class="navbar navbar-expand-sm" style="background-color: lightgrey; margin-bottom: 2%;">
+            <div class="container">
+              <a class="navbar-brand" href="index.html">
+                <img src="imgs/stepp_logo.png" style="width:40px;">
+                <span style="font-family: fantasy; font-style: italic; font-size: 108%; vertical-align: -webkit-baseline-middle; color: black;">Stepp</span>
+              </a>
+            </div>
+        </nav>
         <div class="container">
-            <form>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="from_date">From Date*</label>
-                        <input type="date" class="form-control" id="from_date">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="to_date">To Date*</label>
-                        <input type="date" class="form-control" id="to_date">
-                    </div>
-                    <div style="float: right; margin: 2.8% 2% 2% 2%;">
-                        <a id="go_back_id" href="index.html" class="btn btn-primary">Go Back</a>
-                        <button id="get_txn_btn" type="button" class="btn btn-primary" onclick="getTxns()">Get Transactions</button>
+            <div class="card text-center" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;">
+                <div class="card-header" style="font-weight: bold;">
+                    TRANSACTIONS
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="from_date">From Date*</label>
+                                <input type="date" class="form-control" id="from_date">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="to_date">To Date*</label>
+                                <input type="date" class="form-control" id="to_date">
+                            </div>
+                        </div>
+                    </form>
+                    <table id="transacrions_tbl" class="display" width="100%"></table>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="btn-group btn-group-md" style="float: right;" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary" id="get_txn_btn" onclick="getTxns()">Get Transactions</button>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Home</button>
                     </div>
                 </div>
-            </form>
-            <table id="transacrions_tbl" class="display" width="100%"></table>
+            </div>
         </div>
     </body>
 </html>
