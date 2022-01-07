@@ -220,7 +220,7 @@ function stockSaleBtnClick() {
                         $("#alertPopup").modal("show");
                         return;
                     } else {
-                        stockSalePayloadObj["cost_type"] = $("#cost_type_"+tblUniIdArr[stock]).val();
+                        stockSalePayloadObj["type"] = $("#cost_type_"+tblUniIdArr[stock]).val();
                         if($("#quantity_"+tblUniIdArr[stock]).val() == "") {
                             stockSalePayloadObj["quantity"] = "NA";
                         } else {
@@ -252,7 +252,7 @@ function stockSaleBtnClick() {
         let chk_model = stockSalePayloadArr[prodDate]["model"];
         let chk_size = stockSalePayloadArr[prodDate]["size"];
         let chk_color = stockSalePayloadArr[prodDate]["color"];
-        let chk_costType = stockSalePayloadArr[prodDate]["cost_type"];
+        let chk_costType = stockSalePayloadArr[prodDate]["type"];
         duplicateCheckerArr.push(chk_model+chk_size+chk_color+chk_costType);
     }
     if(arrDuplicatesChecker(duplicateCheckerArr)) {
@@ -279,15 +279,12 @@ function stockSaleBtnClick() {
             let prdCountPayloadArr = [];
             for(let countLoop in stockSalePayloadArr) {
                 let prdCountPayloadObj = {};
-                if(stockSalePayloadArr[countLoop]["cost_type"] == "base") {
-                    prdCountPayloadObj["model"] = stockSalePayloadArr[countLoop]["model"];
-                    prdCountPayloadObj["size"] = stockSalePayloadArr[countLoop]["size"];
-                    prdCountPayloadObj["color"] = stockSalePayloadArr[countLoop]["color"];
-                    prdCountPayloadObj["count"] = parseInt(stockSalePayloadArr[countLoop]["quantity"]) * -1;
-                    prdCountPayloadArr.push(prdCountPayloadObj);
-                } else {
-                    //Do Nothing
-                }
+                prdCountPayloadObj["model"] = stockSalePayloadArr[countLoop]["model"];
+                prdCountPayloadObj["size"] = stockSalePayloadArr[countLoop]["size"];
+                prdCountPayloadObj["color"] = stockSalePayloadArr[countLoop]["color"];
+                prdCountPayloadObj["type"] = stockSalePayloadArr[countLoop]["type"];
+                prdCountPayloadObj["count"] = parseInt(stockSalePayloadArr[countLoop]["quantity"]) * -1;
+                prdCountPayloadArr.push(prdCountPayloadObj);
             }
             let prdCountPayload = {};
             prdCountPayload["updatedData"] = prdCountPayloadArr;
