@@ -23,7 +23,7 @@ function submitScanTxn() {
     scnPayload["date"] = scnDate;
     scnPayload["bill_no"] = scnBillNo;
     scnPayload["description"] = scnDesc;
-    scnPayload["type"] = "Scan";
+    scnPayload["transaction_type"] = "Scan";
     scnPayload["income"] = scnAmt;
     scnPayload["expense"] = 0;
 

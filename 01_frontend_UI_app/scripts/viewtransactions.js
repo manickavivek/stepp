@@ -21,7 +21,7 @@ function getTxns() {
             dataSetRec = [];
             let dateArr = (dbData[record]["date"]).split("T");
             dataSetRec.push(dateArr[0]);
-            dataSetRec.push(dbData[record]["type"]);
+            dataSetRec.push(dbData[record]["transaction_type"]);
             dataSetRec.push(dbData[record]["bill_no"]);
             dataSetRec.push(dbData[record]["description"]);
             dataSetRec.push(dbData[record]["income"]);

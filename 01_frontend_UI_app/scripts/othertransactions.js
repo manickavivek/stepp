@@ -24,11 +24,11 @@ function submitTxn() {
     otrTxnPayload["bill_no"] = "NA";
     otrTxnPayload["description"] = txnDesc;
     if(txnType == "income") {
-        otrTxnPayload["type"] = "Other Income";
+        otrTxnPayload["transaction_type"] = "Other Income";
         otrTxnPayload["income"] = txnAmt;
         otrTxnPayload["expense"] = 0;
     } else {
-        otrTxnPayload["type"] = "Other Expense";
+        otrTxnPayload["transaction_type"] = "Other Expense";
         otrTxnPayload["income"] = 0;
         otrTxnPayload["expense"] = txnAmt;
     }

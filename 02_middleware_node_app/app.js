@@ -118,7 +118,7 @@ app.post('/transactions', function (req, res) {
         if (err) throw err;
         let transactionsObj = {};
         transactionsObj["date"] = new Date(req["body"]["date"]);
-        transactionsObj["type"] = req["body"]["type"];
+        transactionsObj["transaction_type"] = req["body"]["transaction_type"];
         transactionsObj["bill_no"] = req["body"]["bill_no"];
         transactionsObj["description"] = req["body"]["description"];
         transactionsObj["income"] = req["body"]["income"];

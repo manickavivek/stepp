@@ -111,11 +111,15 @@ function onSizeChange(obj) {
         //Do Nothing
     } else {
         let colorArr = [];
-        let colorOptHtml = '<option value="NA">NA</option>';
         for(let color in prodLists) {
             if(prodLists[color]["model"] == chosenModel && prodLists[color]["size"] == chosenSize) {
-                colorOptHtml += '<option value="'+prodLists[color]["color"]+'">'+prodLists[color]["color"]+'</option>';
+                colorArr.push(prodLists[color]["color"]);
             }
+        }
+        let colorUniqueArr = [... new Set(colorArr)];
+        let colorOptHtml = '<option value="NA">NA</option>';
+        for(let uniColor in colorUniqueArr) {
+            colorOptHtml += '<option value="'+colorUniqueArr[uniColor]+'">'+colorUniqueArr[uniColor]+'</option>';
         }
         $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html(colorOptHtml);
     }
@@ -127,16 +131,16 @@ function onColorChange(obj) {
     let chosenColor = $("#color_"+$('#'+obj["id"]).attr('uniqueid')).val();
     let chosenCostType = $("#cost_type_"+$('#'+obj["id"]).attr('uniqueid')).val();
 
-    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', false);
-    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('max', '1');
-    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'max 1');
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
+    $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
 
-    if(chosenModel == "NA" || chosenSize == "NA" || chosenColor == "NA") {
+    if(chosenModel == "NA" || chosenSize == "NA" || chosenColor == "NA" || chosenCostType == "NA") {
         //Do Nothing
     } else {
         for(let avlCount in prodLists) {
-            if(prodLists[avlCount]["model"] == chosenModel && prodLists[avlCount]["size"] == chosenSize && prodLists[avlCount]["color"] == chosenColor) {
-                if(prodLists[avlCount]["count"] == 0  || chosenCostType == "custom") {
+            if(prodLists[avlCount]["model"] == chosenModel && prodLists[avlCount]["size"] == chosenSize && prodLists[avlCount]["color"] == chosenColor && prodLists[avlCount]["type"] == chosenCostType) {
+                if(prodLists[avlCount]["count"] == 0) {
                     $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).prop('readonly', true);
                     $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).attr('placeholder', 'NA');
                     $("#quantity_"+$('#'+obj["id"]).attr('uniqueid')).val('');
@@ -261,7 +265,7 @@ function stockSaleBtnClick() {
         console.log(data);
         let transactionsPayloadObj = {};
         transactionsPayloadObj["date"] = billDate;
-        transactionsPayloadObj["type"] = "Stock Transfer";
+        transactionsPayloadObj["transaction_type"] = "Stock Transfer";
         transactionsPayloadObj["bill_no"] = billNumber;
         transactionsPayloadObj["description"] = "Stock transferred to other shop/dealer.";
         transactionsPayloadObj["income"] = billAmt;

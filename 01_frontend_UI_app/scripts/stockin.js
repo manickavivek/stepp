@@ -240,7 +240,7 @@ function stockinBtnClick() {
         console.log(data);
         let transactionsPayloadObj = {};
         transactionsPayloadObj["date"] = billDate;
-        transactionsPayloadObj["type"] = "Stock In";
+        transactionsPayloadObj["transaction_type"] = "Stock In";
         transactionsPayloadObj["bill_no"] = billNumber;
         transactionsPayloadObj["description"] = "Stock purchase";
         transactionsPayloadObj["income"] = 0;
