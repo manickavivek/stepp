@@ -17,6 +17,7 @@ $( document ).ready(function() {
             dataSetRec.push(dbData[record]["model"]);
             dataSetRec.push(dbData[record]["size"]);
             dataSetRec.push(dbData[record]["color"]);
+            dataSetRec.push(dbData[record]["type"]);
             dataSetRec.push(dbData[record]["count"]);
             dataSet.push(dataSetRec);
         }
@@ -31,10 +32,11 @@ $( document ).ready(function() {
         $('#prd_inventory_tbl').DataTable( {
             data: dataSet,
             columns: [
-                { title: "Model", width: '25%', className: "text-center" },
-                { title: "Size", width: '25%', className: "text-center" },
-                { title: "Color", width: '25%', className: "text-center" },
-                { title: "Availabe stock", width: '25%', className: "text-center" }
+                { title: "Model", width: '20%', className: "text-center" },
+                { title: "Size", width: '20%', className: "text-center" },
+                { title: "Color", width: '20%', className: "text-center" },
+                { title: "Type", width: '20%', className: "text-center" },
+                { title: "Availabe stock", width: '20%', className: "text-center" }
             ]
         } );
     }

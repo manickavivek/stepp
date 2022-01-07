@@ -19,12 +19,14 @@ app.post('/product', function (req, res) {
         let searchProObj = {
             "model": req["body"]["model"],
             "size": req["body"]["size"],
-            "color": req["body"]["color"]
+            "color": req["body"]["color"],
+            "type": req["body"]["type"]
         };
         let addProObj = {
             "model": req["body"]["model"],
             "size": req["body"]["size"],
             "color": req["body"]["color"],
+            "type": req["body"]["type"],
             "count": req["body"]["count"]
         };
 
@@ -141,6 +143,7 @@ app.post('/productCountUpdate', function (req, res) {
         queryObj["model"] = totalDataArr[0]["model"];
         queryObj["size"] = totalDataArr[0]["size"];
         queryObj["color"] = totalDataArr[0]["color"];
+        queryObj["type"] = totalDataArr[0]["type"];
         let incValue = parseInt(totalDataArr[0]["count"]);
         let incValueObj = { $inc: { "count" : incValue } };
         MongoClient.connect(mongodbUrl, function(err, db) {

@@ -28,6 +28,7 @@ function addProductBtnClick() {
     let model = ($("#model").val()).trim();
     let size = $("#size").val();
     let color = $("#color").val();
+    let type = $("#type").val();
 
     if(model == "") {
         $("#modelMsg").html("Enter all mandatory inputs!!");
@@ -44,6 +45,7 @@ function addProductBtnClick() {
     addPrdPayload["model"] = model;
     addPrdPayload["size"] = size;
     addPrdPayload["color"] = color;
+    addPrdPayload["type"] = type;
     addPrdPayload["count"] = 0;
 
     console.log("Calling addProduct API..");

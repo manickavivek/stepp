@@ -46,8 +46,15 @@ function addRow() {
     newTrHtml += '</select>';
     newTrHtml += "</td>";
     newTrHtml += '<td>';
-    newTrHtml += '<select class="form-control" id="color_'+uniqueNo+'">';
+    newTrHtml += '<select class="form-control" id="color_'+uniqueNo+'" uniqueid="'+uniqueNo+'" onchange="onColorChange(this)">';
     newTrHtml += '<option value="NA">NA</option>';
+    newTrHtml += '</select>';
+    newTrHtml += "</td>";
+    newTrHtml += '<td>';
+    newTrHtml += '<select class="form-control" id="type_'+uniqueNo+'">';
+    newTrHtml += '<option value="NA">NA</option>';
+    newTrHtml += '<option value="base">Base</option>';
+    newTrHtml += '<option value="custom">Custom</option>';
     newTrHtml += '</select>';
     newTrHtml += "</td>";
     newTrHtml += '<td>';
@@ -72,6 +79,7 @@ function onModelChange(obj) {
     let chosenModel = $("#"+obj["id"]).val();
     $("#size_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
     $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    $("#type_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
     if(chosenModel == "NA") {
         //Do Nothing
     } else {
@@ -94,17 +102,41 @@ function onSizeChange(obj) {
     let chosenModel = $("#model_"+$('#'+obj["id"]).attr('uniqueid')).val();
     let chosenSize = $("#"+obj["id"]).val();
     $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    $("#type_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
     if(chosenModel == "NA" || chosenSize == "NA") {
         //Do Nothing
     } else {
         let colorArr = [];
-        let colorOptHtml = '<option value="NA">NA</option>';
         for(let color in prodLists) {
-            if(prodLists[color]["model"] == chosenModel && prodLists[color]["size"] == chosenSize) {
-                colorOptHtml += '<option value="'+prodLists[color]["color"]+'">'+prodLists[color]["color"]+'</option>';
+            if(prodLists[color]["model"] == chosenModel) {
+                colorArr.push(prodLists[color]["color"]);
             }
         }
+        let sizeUniqueArr = [... new Set(colorArr)];
+        let colorOptHtml = '<option value="NA">NA</option>';
+        for(let uniColor in sizeUniqueArr) {
+            colorOptHtml += '<option value="'+sizeUniqueArr[uniColor]+'">'+sizeUniqueArr[uniColor]+'</option>';
+        }
         $("#color_"+$('#'+obj["id"]).attr('uniqueid')).html(colorOptHtml);
+    }
+}
+
+function onColorChange(obj) {
+    let chosenModel = $("#model_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenSize = $("#size_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    let chosenColor = $("#color_"+$('#'+obj["id"]).attr('uniqueid')).val();
+    $("#type_"+$('#'+obj["id"]).attr('uniqueid')).html('<option value="NA">NA</option>');
+    if(chosenModel == "NA" || chosenSize == "NA" || chosenColor == "NA") {
+        //Do Nothing
+    } else {
+        let typeArr = [];
+        let typeOptHtml = '<option value="NA">NA</option>';
+        for(let type in prodLists) {
+            if(prodLists[type]["model"] == chosenModel && prodLists[type]["size"] == chosenSize && prodLists[type]["color"] == chosenColor) {
+                typeOptHtml += '<option value="'+prodLists[type]["type"]+'">'+prodLists[type]["type"]+'</option>';
+            }
+        }
+        $("#type_"+$('#'+obj["id"]).attr('uniqueid')).html(typeOptHtml);
     }
 }
 
@@ -160,19 +192,26 @@ function stockinBtnClick() {
                     return;
                 } else {
                     stockInPayloadObj["color"] = $("#color_"+tblUniIdArr[stock]).val();
-                    if($("#quantity_"+tblUniIdArr[stock]).val() == "") {
-                        $("#modelMsg").html("Please enter quantity for all rows!!");
+                    if($("#type_"+tblUniIdArr[stock]).val() == "NA") {
+                        $("#modelMsg").html("Please enter type for all rows!!");
                         $("#alertPopup").modal("show");
                         return;
                     } else {
-                        stockInPayloadObj["quantity"] = $("#quantity_"+tblUniIdArr[stock]).val();
-                        if($("#amount_"+tblUniIdArr[stock]).val() == "") {
-                            $("#modelMsg").html("Please enter amount for all rows!!");
+                        stockInPayloadObj["type"] = $("#type_"+tblUniIdArr[stock]).val();
+                        if($("#quantity_"+tblUniIdArr[stock]).val() == "") {
+                            $("#modelMsg").html("Please enter quantity for all rows!!");
                             $("#alertPopup").modal("show");
                             return;
                         } else {
-                            stockInPayloadObj["purchase_rate"] = $("#amount_"+tblUniIdArr[stock]).val();
-                            stockInPayloadArr.push(stockInPayloadObj);
+                            stockInPayloadObj["quantity"] = $("#quantity_"+tblUniIdArr[stock]).val();
+                            if($("#amount_"+tblUniIdArr[stock]).val() == "") {
+                                $("#modelMsg").html("Please enter amount for all rows!!");
+                                $("#alertPopup").modal("show");
+                                return;
+                            } else {
+                                stockInPayloadObj["purchase_rate"] = $("#amount_"+tblUniIdArr[stock]).val();
+                                stockInPayloadArr.push(stockInPayloadObj);
+                            }
                         }
                     }
                 }
@@ -186,7 +225,8 @@ function stockinBtnClick() {
         let chk_model = stockInPayloadArr[prodDate]["model"];
         let chk_size = stockInPayloadArr[prodDate]["size"];
         let chk_color = stockInPayloadArr[prodDate]["color"];
-        duplicateCheckerArr.push(chk_model+chk_size+chk_color);
+        let chk_type = stockInPayloadArr[prodDate]["type"];
+        duplicateCheckerArr.push(chk_model+chk_size+chk_color+chk_type);
     }
     if(arrDuplicatesChecker(duplicateCheckerArr)) {
         $("#modelMsg").html("Duplicate product entries not allowed!!");
@@ -215,6 +255,7 @@ function stockinBtnClick() {
                 prdCountPayloadObj["model"] = stockInPayloadArr[countLoop]["model"];
                 prdCountPayloadObj["size"] = stockInPayloadArr[countLoop]["size"];
                 prdCountPayloadObj["color"] = stockInPayloadArr[countLoop]["color"];
+                prdCountPayloadObj["type"] = stockInPayloadArr[countLoop]["type"];
                 prdCountPayloadObj["count"] = stockInPayloadArr[countLoop]["quantity"];
                 prdCountPayloadArr.push(prdCountPayloadObj);
             }

@@ -38,6 +38,21 @@ function getTxns() {
 
         $('#transacrions_tbl').DataTable({
             data: dataSet,
+            columnDefs: [
+                {
+                    targets:2, // Start with the last
+                    render: function ( data, type, row, meta ) {
+                        if(type === 'display') {
+                            if(row[1] == "Stock In") {
+                                data = '<a href="index.html?date='+row[0]+'&=billno='+row[2]+'">'+data+'</a>'; //TBD
+                            } else if(row[1] == "Stock Sale" || row[1] == "Stock Transfer") {
+                                data = '<a href="index.html?date='+row[0]+'&=billno='+row[2]+'">'+data+'</a>'; //TBD
+                            }
+                        }
+                        return data;
+                    }
+                }
+            ],
             columns: [
                 { title: "Date", width: '10%', className: "text-center" },
                 { title: "Category", width: '15%', className: "text-center" },
