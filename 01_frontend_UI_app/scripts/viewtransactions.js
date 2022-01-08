@@ -42,11 +42,12 @@ function getTxns() {
                 {
                     targets:2, // Start with the last
                     render: function ( data, type, row, meta ) {
+                        console.log(row);
                         if(type === 'display') {
                             if(row[1] == "Stock In") {
-                                data = '<a href="index.html?date='+row[0]+'&=billno='+row[2]+'">'+data+'</a>'; //TBD
+                                data = '<a target="_blank" href="stockinbill.html?type='+row[1]+'&date='+row[0]+'&billno='+row[2]+'&amount='+row[5]+'">'+data+'</a>'; //TBD
                             } else if(row[1] == "Stock Sale" || row[1] == "Stock Transfer") {
-                                data = '<a href="index.html?date='+row[0]+'&=billno='+row[2]+'">'+data+'</a>'; //TBD
+                                data = '<a target="_blank" href="stocksalebill.html?type='+row[1]+'&date='+row[0]+'&billno='+row[2]+'&amount='+row[5]+'">'+data+'</a>'; //TBD
                             }
                         }
                         return data;
