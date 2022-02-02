@@ -200,8 +200,7 @@ function stockSaleBtnClick() {
             $("#alertPopup").modal("show");
             return;
         } else {
-            stockSalePayloadObj["bill_no"] = billNumber;
-            stockSalePayloadObj["date"] = billDate;
+
             stockSalePayloadObj["model"] = $("#model_"+tblUniIdArr[stock]).val();
             if($("#size_"+tblUniIdArr[stock]).val() == "NA") {
                 $("#modelMsg").html("Please enter size for all rows!!");
@@ -261,10 +260,7 @@ function stockSaleBtnClick() {
         return;
     }
 
-    // 1. insertMany into stock_sale collection - stockSalePayloadArr
-    genericApiCalls("POST", "/stocksale", stockSalePayloadArr, stockSaleSuccesscb, errorcb);
-    function stockSaleSuccesscb(data) {
-        console.log(data);
+
         let transactionsPayloadObj = {};
         transactionsPayloadObj["date"] = billDate;
         transactionsPayloadObj["transaction_type"] = "Stock Sale";
@@ -272,6 +268,7 @@ function stockSaleBtnClick() {
         transactionsPayloadObj["description"] = "Stock sale to customer";
         transactionsPayloadObj["income"] = billAmt;
         transactionsPayloadObj["expense"] = 0;
+        transactionsPayloadObj["more_details"] = stockSalePayloadArr;
         // 2. insert into transactions collection - transactionsPayloadObj
         genericApiCalls("POST", "/transactions", transactionsPayloadObj, transactionsSuccesscb, errorcb);
         function transactionsSuccesscb(data) {
@@ -297,5 +294,5 @@ function stockSaleBtnClick() {
                 }, 500);
             }
         }
-    }
+
 }

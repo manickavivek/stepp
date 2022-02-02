@@ -123,6 +123,9 @@ app.post('/transactions', function (req, res) {
         transactionsObj["description"] = req["body"]["description"];
         transactionsObj["income"] = req["body"]["income"];
         transactionsObj["expense"] = req["body"]["expense"];
+        if((req["body"]).hasOwnProperty("more_details")) {
+            transactionsObj["more_details"] = req["body"]["more_details"]
+        }
         var dbo = db.db("stepp_db");
         dbo.collection("transactions").insertOne(transactionsObj, function(err, result) {
             if (err) throw err;
