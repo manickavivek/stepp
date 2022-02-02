@@ -3,19 +3,21 @@ let prodLists = [];
 $( document ).ready(function() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
-    $("#bill_no").val(params["billno"]);
-    $("#bill_date").val(params["date"]);
-    $("#bill_amt").val(params["amount"]);
     let getStockinBillPayload = {};
-    getStockinBillPayload["date"] = params["date"];
-    getStockinBillPayload["bill_no"] = params["billno"];
+    getStockinBillPayload["id"] = params["id"];
 
-    genericApiCalls("POST", "/getStockinBill", getStockinBillPayload, getStockinBillSuccesscb, errorcb);
+    genericApiCalls("POST", "/getTransaction", getStockinBillPayload, getStockinBillSuccesscb, errorcb);
     function getStockinBillSuccesscb(data) {
         setTimeout(function(){ 
             $("#loadingPopup").modal("hide");
         }, 500);
-        let res = data["response"];
+        let resObj = data["response"][0];
+        console.log(resObj);
+        $("#bill_no").val(resObj["bill_no"]);
+        $("#bill_amt").val(resObj["expense"]);
+        let [ date, time ] = resObj["date"].split("T");
+        $("#bill_date").val(date);
+        let res = resObj["more_details"];
         let newTrHtml = "";
         for(let resLoop in res) {
             newTrHtml += '<tr>';

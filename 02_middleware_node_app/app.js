@@ -1,5 +1,6 @@
 var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 var app = express();
 var mongodbUrl = "mongodb://localhost:27017/";
 
@@ -85,33 +86,33 @@ app.get('/getColors', function (req, res) {
     });
 });
 
-app.post('/stockin', function (req, res) {
-    MongoClient.connect(mongodbUrl, function(err, db) {
-        if (err) throw err;        
-        var dbo = db.db("stepp_db");
-        dbo.collection("stock_in").insertMany(req["body"], function(err, result) {
-            if (err) throw err;
-            if(result["acknowledged"] == true) {
-                res.json({"response": "Stock_in collection updated successfully!!"});
-            }
-            db.close();
-        });
-    });
-});
+// app.post('/stockin', function (req, res) {
+//     MongoClient.connect(mongodbUrl, function(err, db) {
+//         if (err) throw err;        
+//         var dbo = db.db("stepp_db");
+//         dbo.collection("stock_in").insertMany(req["body"], function(err, result) {
+//             if (err) throw err;
+//             if(result["acknowledged"] == true) {
+//                 res.json({"response": "Stock_in collection updated successfully!!"});
+//             }
+//             db.close();
+//         });
+//     });
+// });
 
-app.post('/stocksale', function (req, res) {
-    MongoClient.connect(mongodbUrl, function(err, db) {
-        if (err) throw err;        
-        var dbo = db.db("stepp_db");
-        dbo.collection("stock_sale").insertMany(req["body"], function(err, result) {
-            if (err) throw err;
-            if(result["acknowledged"] == true) {
-                res.json({"response": "Stock_sale collection updated successfully!!"});
-            }
-            db.close();
-        });
-    });
-});
+// app.post('/stocksale', function (req, res) {
+//     MongoClient.connect(mongodbUrl, function(err, db) {
+//         if (err) throw err;        
+//         var dbo = db.db("stepp_db");
+//         dbo.collection("stock_sale").insertMany(req["body"], function(err, result) {
+//             if (err) throw err;
+//             if(result["acknowledged"] == true) {
+//                 res.json({"response": "Stock_sale collection updated successfully!!"});
+//             }
+//             db.close();
+//         });
+//     });
+// });
 
 app.post('/transactions', function (req, res) {
     MongoClient.connect(mongodbUrl, function(err, db) {
@@ -183,20 +184,34 @@ app.post('/getTransactions', function (req, res) {
     });
 });
 
-app.post('/getStockinBill', function (req, res) {
-    let queryObj = {};
-    queryObj["bill_no"] = req["body"]["bill_no"];
-    queryObj["date"] = req["body"]["date"];
+app.post('/getTransaction', function (req, res) {
+    let id = req["body"]["id"];
+    let queryObj = { "_id": new ObjectId(id)};
     MongoClient.connect(mongodbUrl, function(err, db) {
         if (err) throw err;
         var dbo = db.db("stepp_db");
-        dbo.collection("stock_in").find(queryObj).toArray(function(err, result) {
+        dbo.collection("transactions").find(queryObj).toArray(function(err, result) {
             if (err) throw err;
             res.json({"response": result});
             db.close();
         });
     });
 });
+
+// app.post('/getStockinBill', function (req, res) {
+//     let queryObj = {};
+//     queryObj["bill_no"] = req["body"]["bill_no"];
+//     queryObj["date"] = req["body"]["date"];
+//     MongoClient.connect(mongodbUrl, function(err, db) {
+//         if (err) throw err;
+//         var dbo = db.db("stepp_db");
+//         dbo.collection("stock_in").find(queryObj).toArray(function(err, result) {
+//             if (err) throw err;
+//             res.json({"response": result});
+//             db.close();
+//         });
+//     });
+// });
 
 app.listen(3000, function () {
   console.log('Stepp app listening on port 3000!');
