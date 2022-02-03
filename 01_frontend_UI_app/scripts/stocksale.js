@@ -178,9 +178,8 @@ function onDeletBtnClick(obj) {
 }
 
 function stockSaleBtnClick() {
-    let billNumber = $("#bill_no").val();
-    let billDate = $("#bill_date").val();
-    let billAmt = $("#bill_amt").val();
+    let [ billNumber, billDate, billAmt ] = [ $("#bill_no").val(), $("#bill_date").val(), $("#bill_amt").val() ];
+    let [ custName, custPh, custAdd ] = [ $("#cust_name").val(), $("#cust_ph").val(), $("#cust_address").val() ];
     if(billNumber == "" || billDate == "" || billAmt == "") {
         $("#modelMsg").html("Please enter all mandatory fields!!");
         $("#alertPopup").modal("show");
@@ -268,6 +267,9 @@ function stockSaleBtnClick() {
         transactionsPayloadObj["description"] = "Stock sale to customer";
         transactionsPayloadObj["income"] = billAmt;
         transactionsPayloadObj["expense"] = 0;
+        transactionsPayloadObj["customer_name"] = custName;
+        transactionsPayloadObj["customer_phone"] = custPh;
+        transactionsPayloadObj["customer_address"] = custAdd;
         transactionsPayloadObj["more_details"] = stockSalePayloadArr;
         // 2. insert into transactions collection - transactionsPayloadObj
         genericApiCalls("POST", "/transactions", transactionsPayloadObj, transactionsSuccesscb, errorcb);

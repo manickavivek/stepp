@@ -12,6 +12,9 @@ $( document ).ready(function() {
         let resObj = data["response"][0];
         console.log(resObj);
         $("#bill_no").val(resObj["bill_no"]);
+        $("#cust_name").val(resObj["customer_name"] == "" ? "Not Available" : resObj["customer_name"] );
+        $("#cust_ph").val(resObj["customer_phone"] == "" ? "Not Available" : resObj["customer_phone"] );
+        $("#cust_address").val(resObj["customer_address"] == "" ? "Not Available" : resObj["customer_address"] );
         $("#bill_amt").val(resObj["income"]);
         let [ date, time ] = resObj["date"].split("T");
         $("#bill_date").val(date);

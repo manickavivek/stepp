@@ -96,8 +96,17 @@ app.post('/transactions', function (req, res) {
         transactionsObj["description"] = req["body"]["description"];
         transactionsObj["income"] = req["body"]["income"];
         transactionsObj["expense"] = req["body"]["expense"];
+        if((req["body"]).hasOwnProperty("customer_name")) {
+            transactionsObj["customer_name"] = req["body"]["customer_name"];
+        }
+        if((req["body"]).hasOwnProperty("customer_phone")) {
+            transactionsObj["customer_phone"] = req["body"]["customer_phone"];
+        }
+        if((req["body"]).hasOwnProperty("customer_address")) {
+            transactionsObj["customer_address"] = req["body"]["customer_address"];
+        }
         if((req["body"]).hasOwnProperty("more_details")) {
-            transactionsObj["more_details"] = req["body"]["more_details"]
+            transactionsObj["more_details"] = req["body"]["more_details"];
         }
         var dbo = db.db("stepp_db");
         dbo.collection("transactions").insertOne(transactionsObj, function(err, result) {
