@@ -86,34 +86,6 @@ app.get('/getColors', function (req, res) {
     });
 });
 
-// app.post('/stockin', function (req, res) {
-//     MongoClient.connect(mongodbUrl, function(err, db) {
-//         if (err) throw err;        
-//         var dbo = db.db("stepp_db");
-//         dbo.collection("stock_in").insertMany(req["body"], function(err, result) {
-//             if (err) throw err;
-//             if(result["acknowledged"] == true) {
-//                 res.json({"response": "Stock_in collection updated successfully!!"});
-//             }
-//             db.close();
-//         });
-//     });
-// });
-
-// app.post('/stocksale', function (req, res) {
-//     MongoClient.connect(mongodbUrl, function(err, db) {
-//         if (err) throw err;        
-//         var dbo = db.db("stepp_db");
-//         dbo.collection("stock_sale").insertMany(req["body"], function(err, result) {
-//             if (err) throw err;
-//             if(result["acknowledged"] == true) {
-//                 res.json({"response": "Stock_sale collection updated successfully!!"});
-//             }
-//             db.close();
-//         });
-//     });
-// });
-
 app.post('/transactions', function (req, res) {
     MongoClient.connect(mongodbUrl, function(err, db) {
         if (err) throw err;
@@ -197,6 +169,34 @@ app.post('/getTransaction', function (req, res) {
         });
     });
 });
+
+// app.post('/stockin', function (req, res) {
+//     MongoClient.connect(mongodbUrl, function(err, db) {
+//         if (err) throw err;        
+//         var dbo = db.db("stepp_db");
+//         dbo.collection("stock_in").insertMany(req["body"], function(err, result) {
+//             if (err) throw err;
+//             if(result["acknowledged"] == true) {
+//                 res.json({"response": "Stock_in collection updated successfully!!"});
+//             }
+//             db.close();
+//         });
+//     });
+// });
+
+// app.post('/stocksale', function (req, res) {
+//     MongoClient.connect(mongodbUrl, function(err, db) {
+//         if (err) throw err;        
+//         var dbo = db.db("stepp_db");
+//         dbo.collection("stock_sale").insertMany(req["body"], function(err, result) {
+//             if (err) throw err;
+//             if(result["acknowledged"] == true) {
+//                 res.json({"response": "Stock_sale collection updated successfully!!"});
+//             }
+//             db.close();
+//         });
+//     });
+// });
 
 // app.post('/getStockinBill', function (req, res) {
 //     let queryObj = {};
