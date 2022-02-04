@@ -179,6 +179,22 @@ app.post('/getTransaction', function (req, res) {
     });
 });
 
+app.post('/updatePurchaseRate', function (req, res) {
+    let id = req["body"]["id"];
+    let moreDetails = req["body"]["more_details"];
+    let queryObj = { "_id": new ObjectId(id)};
+    let newVal = { $set: { more_details: moreDetails } };
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("stepp_db");
+        dbo.collection("transactions").updateOne(queryObj, newVal, function(err, result) {
+            if (err) throw err;
+            res.json({"response": "1 document updated"});
+            db.close();
+        });
+    });
+});
+
 // app.post('/stockin', function (req, res) {
 //     MongoClient.connect(mongodbUrl, function(err, db) {
 //         if (err) throw err;        
