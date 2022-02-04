@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Stepp App</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/libs/bootstrap.min.css">
+        <link rel="stylesheet" href="css/libs/jquery.dataTables.min.css">
+        <script src="scripts/libs/jquery.min.js"></script>
+        <script src="scripts/libs/popper.min.js"></script>
+        <script src="scripts/libs/bootstrap.min.js"></script>
+        <script src="scripts/libs/jquery.dataTables.min.js"></script>
+        <script src="scripts/common.js"></script>
+        <script src="scripts/viewcustomers.js"></script>
+    </head>
+    <style>
+    </style>
+    <body>
+        <nav class="navbar navbar-expand-sm" style="background-color: lightgrey; margin-bottom: 2%;">
+            <div class="container">
+              <a class="navbar-brand" href="index.html">
+                <img src="imgs/stepp_logo.png" style="width:40px;">
+                <span style="font-family: fantasy; font-style: italic; font-size: 108%; vertical-align: -webkit-baseline-middle; color: black;">Stepp</span>
+              </a>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="card text-center" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;">
+                <div class="card-header" style="font-weight: bold;">
+                    CUSTOMERS INVENTORY
+                </div>
+                <div class="card-body">
+                    <table id="cust_inventory_tbl" class="display" width="100%"></table>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="btn-group btn-group-md" style="float: right;" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

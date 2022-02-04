@@ -195,6 +195,18 @@ app.post('/updatePurchaseRate', function (req, res) {
     });
 });
 
+app.get('/getCustomerDatabase', function (req, res) {
+    MongoClient.connect(mongodbUrl, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("stepp_db");
+        dbo.collection("transactions").find({ transaction_type : "Stock Sale" }).toArray(function(err, result) {
+            if (err) throw err;
+            res.json({"response": result});
+            db.close();
+        });
+    });
+});
+
 // app.post('/stockin', function (req, res) {
 //     MongoClient.connect(mongodbUrl, function(err, db) {
 //         if (err) throw err;        
